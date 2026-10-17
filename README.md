@@ -1,6 +1,6 @@
 # Vortex Auto-Clicker
 
-[![CI](https://github.com/your-username/vortex-autoclicker/actions/workflows/ci.yml/badge.svg)](https://github.com/your-username/vortex-autoclicker/actions/workflows/ci.yml)
+[![CI](https://github.com/ulyildiz/Ocr-Vortex-Autoclicker/actions/workflows/ci.yml/badge.svg)](https://github.com/ulyildiz/Ocr-Vortex-Autoclicker/actions/workflows/ci.yml)
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
 ![Platform](https://img.shields.io/badge/platform-Windows-lightgrey)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
@@ -69,22 +69,29 @@ while the UI is still changing.
 ### From source (recommended for now)
 
 ```bash
-git clone https://github.com/your-username/vortex-autoclicker.git
-cd vortex-autoclicker
+git clone https://github.com/ulyildiz/Ocr-Vortex-Autoclicker.git
+cd Ocr-Vortex-Autoclicker
 python -m venv .venv
 .venv\Scripts\activate
-pip install .
+python -m pip install .
 ```
 
 ### As an isolated tool with pipx
 
 ```bash
-pipx install git+https://github.com/your-username/vortex-autoclicker.git
+pipx install git+https://github.com/ulyildiz/Ocr-Vortex-Autoclicker.git
 ```
 
 Both methods install the `vortex-autoclicker` command together with its
 dependencies: `rapidocr`, `onnxruntime`, `pyautogui`, `keyboard`, `pillow`,
 `numpy` and `opencv-python`.
+
+> [!TIP]
+> If Windows says *"An Application Control policy has blocked this file"*
+> when you run `pip` or `vortex-autoclicker`, the policy (for example Smart App
+> Control) is blocking the small unsigned `.exe` launchers that pip creates in
+> `.venv\Scripts\`. Run everything through Python instead, which is signed:
+> `python -m pip install .` to install and `python -m vortex_autoclicker` to start.
 
 ## Usage
 
@@ -205,7 +212,8 @@ Useful building blocks:
 
 | Problem | Fix |
 |---|---|
-| `Required module '...' is not installed` | Run `pip install .` again inside the right virtual environment. |
+| `An Application Control policy has blocked this file` | Windows is blocking an `.exe` launcher in `.venv\Scripts\`. Use `python -m pip ...` and `python -m vortex_autoclicker` instead. |
+| `Required module '...' is not installed` | Run `python -m pip install .` again inside the right virtual environment. |
 | Buttons are found but not clicked / clicked in the wrong place | Display scaling other than 100 % can shift coordinates. Try 100 % scaling, or make sure Python is DPI-aware. |
 | Buttons are not detected | Run with `-v`. Lower `--threshold` a little (e.g. `0.8`) and check that the UI is in English. |
 | `Close page: no window with 'nexus' in its title` | The log lists every open window title. Pick a keyword from your browser's title and pass it with `--browser-keyword`. |
@@ -217,13 +225,13 @@ Useful building blocks:
 ```bash
 python -m venv .venv
 .venv\Scripts\activate
-pip install -e ".[dev]"
+python -m pip install -e ".[dev]"
 
-pytest                 # unit tests (no screen, mouse or Windows needed)
-pytest --cov           # with coverage
-ruff check .           # lint
-ruff format .          # format
-mypy                   # static type check (strict)
+python -m pytest        # unit tests (no screen, mouse or Windows needed)
+python -m pytest --cov  # with coverage
+python -m ruff check .  # lint
+python -m ruff format . # format
+python -m mypy          # static type check (strict)
 ```
 
 The tests replace every side effect (screen capture, OCR engine, mouse,
@@ -236,7 +244,7 @@ request.
 ## Project structure
 
 ```
-vortex-autoclicker/
+Ocr-Vortex-Autoclicker/
 ├── .github/workflows/ci.yml     # Lint, type check and tests on Windows
 ├── src/vortex_autoclicker/
 │   ├── __init__.py              # Public API and __version__

@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
 license-files = ["LICENSE"]
-authors = [{ name = "Your Name" }]
+authors = [{ name = "Ulaş Berke Yıldız" }]
 keywords = ["vortex", "nexus-mods", "auto-clicker", "ocr", "automation", "modding"]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -49,9 +49,9 @@ dev = [
 vortex-autoclicker = "vortex_autoclicker.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/your-username/vortex-autoclicker"
-Issues = "https://github.com/your-username/vortex-autoclicker/issues"
-Changelog = "https://github.com/your-username/vortex-autoclicker/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/ulyildiz/Ocr-Vortex-Autoclicker"
+Issues = "https://github.com/ulyildiz/Ocr-Vortex-Autoclicker/issues"
+Changelog = "https://github.com/ulyildiz/Ocr-Vortex-Autoclicker/blob/main/CHANGELOG.md"
 
 [tool.setuptools.dynamic]
 version = { attr = "vortex_autoclicker.__version__" }
