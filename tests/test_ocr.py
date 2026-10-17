@@ -1,14 +1,49 @@
 from __future__ import annotations
 
+import importlib
 from types import SimpleNamespace
 
 import pytest
 
-from vortex_autoclicker.exceptions import OcrError
+from vortex_autoclicker.exceptions import DependencyError, OcrError
 from vortex_autoclicker.matching import TextItem
-from vortex_autoclicker.ocr import ScreenReader, box_center, parse_ocr_output
+from vortex_autoclicker.ocr import ScreenReader, box_center, load_rapidocr, parse_ocr_output
 
 SQUARE = [[0, 0], [10, 0], [10, 20], [0, 20]]
+
+
+def fake_import(available: dict[str, object]):  # type: ignore[no-untyped-def]
+    def import_module(name: str) -> object:
+        if name not in available:
+            raise ImportError(name)
+        return available[name]
+
+    return import_module
+
+
+@pytest.mark.parametrize(
+    ("installed", "expected"),
+    [
+        (["rapidocr", "rapidocr_onnxruntime"], "new"),
+        (["rapidocr_onnxruntime"], "legacy"),
+    ],
+)
+def test_load_rapidocr_prefers_new_package(
+    monkeypatch: pytest.MonkeyPatch, installed: list[str], expected: str
+) -> None:
+    modules = {
+        "rapidocr": SimpleNamespace(RapidOCR=lambda: "new"),
+        "rapidocr_onnxruntime": SimpleNamespace(RapidOCR=lambda: "legacy"),
+    }
+    available = {name: modules[name] for name in installed}
+    monkeypatch.setattr(importlib, "import_module", fake_import(available))
+    assert load_rapidocr() == expected
+
+
+def test_load_rapidocr_without_backend_raises(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(importlib, "import_module", fake_import({}))
+    with pytest.raises(DependencyError):
+        load_rapidocr()
 
 
 def test_box_center() -> None:

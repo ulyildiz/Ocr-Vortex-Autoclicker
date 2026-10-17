@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import importlib
 import logging
 from collections.abc import Callable, Iterable, Sequence
 from typing import Any
@@ -25,17 +26,15 @@ def load_rapidocr() -> OcrEngine:
         DependencyError: If neither ``rapidocr`` nor ``rapidocr_onnxruntime``
             is installed.
     """
-    try:
-        from rapidocr import RapidOCR  # newer package
-    except ImportError:
+    # Imported by name so mypy does not see two conflicting ``RapidOCR`` imports.
+    for module_name in ("rapidocr", "rapidocr_onnxruntime"):  # newer first, then legacy
         try:
-            from rapidocr_onnxruntime import RapidOCR  # older package
-        except ImportError as exc:
-            raise DependencyError(
-                "No OCR backend found. Install it with: pip install rapidocr onnxruntime"
-            ) from exc
-    engine: OcrEngine = RapidOCR()
-    return engine
+            module = importlib.import_module(module_name)
+        except ImportError:
+            continue
+        engine: OcrEngine = module.RapidOCR()
+        return engine
+    raise DependencyError("No OCR backend found. Install it with: pip install rapidocr onnxruntime")
 
 
 def grab_screen_bgr() -> Any:
